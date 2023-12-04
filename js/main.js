@@ -333,6 +333,7 @@ f. Return the section element
 */
 
 
+
 function toggleCommentSection(postId) {
 // Check if postId is not provided
 if (postId === undefined) {
@@ -358,6 +359,7 @@ toggleCommentSection(1);
 toggleCommentSection(2);
 
 
+
 /*
 toggleCommentButton (4)
 a. Receives a postId as the parameter
@@ -370,6 +372,7 @@ Comments'
 e. Suggestion (not required) for above: try a ternary statement
 f. Return the button element
 */
+
 
 function toggleCommentButton(postId) {
 // Check if postId is not provided
@@ -386,20 +389,22 @@ if (!button || button.getAttribute('data-post-id') !== postId.toString()) {
 return null;
 }
 
-if (!button) {
-button = document.createElement('button');
-button.setAttribute('data-post-id', postId);
-button.textContent = 'Show Comments';
-document.body.appendChild(button);
+// If the button doesn't have a click event listener, add one
+if (!button.hasAttribute('data-click-listener')) {
+button.addEventListener('click', function(event) {
+  toggleComments(event, postId);
+});
+button.setAttribute('data-click-listener', 'true');
 }
 
+// Toggle the text content based on the existing comments
 button.textContent = button.textContent === 'Show Comments' ? 'Hide Comments' : 'Show Comments';
 
 return button;
 }
 
 // Example usage:
-const postIdToToggle = 456; // Replace with the desired postId
+const postIdToToggle = 1; // Replace with the desired postId
 const toggledButton = toggleCommentButton(postIdToToggle);
 
 /*
@@ -450,36 +455,32 @@ function until we get there.
 */
 
 function addButtonListeners() {
-    // Select all buttons nested inside the main element
-    const buttons = document.querySelectorAll('main button');
-  
-    // If buttons exist
-    if (buttons.length > 0) {
-      // Loop through the NodeList of buttons
-      buttons.forEach(button => {
-        // Gets the postId from button.dataset.postId
-        const postId = button.dataset.postId;
-  
-        // If a postId exists, add a click event listener to the button
-        if (postId) {
-          // Inside the loop, add a click event listener to each button
-          button.addEventListener('click', function(event) {
-            // The listener calls an anonymous function
-            // Inside the anonymous function, the function toggleComments is called
-            toggleComments(event, postId);
-          });
-        }
-      });
-  
-      // Return the button elements which were selected
-      return buttons;
-    } else {
-      console.error('No buttons found.');
-      return null;
-    }
-  }
-  
+// Select all buttons nested inside the main element
+const buttons = document.querySelectorAll('main button');
 
+// If buttons exist
+if (buttons.length > 0) {
+// Loop through the NodeList of buttons
+buttons.forEach(button => {
+  // Gets the postId from button.dataset.postId
+  const postId = button.dataset.postId;
+
+  // Add a click event listener to the button
+  button.addEventListener('click', function (event) {
+    // The listener calls an anonymous function
+    // Inside the anonymous function, the function toggleComments is called
+    toggleComments(event, postId);
+  });
+});
+
+// Return the button elements which were selected
+return buttons;
+} else {
+console.error('No buttons found.');
+// Return an empty NodeList when no buttons are found
+return document.querySelectorAll('main button:not([data-post-id])');
+}
+}
 /*
 7. removeButtonListeners
 a. Selects all buttons nested inside the main element
@@ -506,6 +507,7 @@ if (postId) {
 
 return buttons;
 }
+
 
 /*
 8. createComments
