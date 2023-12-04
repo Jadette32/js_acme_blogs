@@ -450,22 +450,35 @@ function until we get there.
 */
 
 function addButtonListeners() {
-const buttons = document.querySelectorAll('main button');
-
-if (buttons.length > 0) {
-buttons.forEach(button => {
-  const postId = button.dataset.postId;
-
-  if (postId) {
-    button.addEventListener('click', function(event) {
-      toggleComments(event, postId);
-    });
+    // Select all buttons nested inside the main element
+    const buttons = document.querySelectorAll('main button');
+  
+    // If buttons exist
+    if (buttons.length > 0) {
+      // Loop through the NodeList of buttons
+      buttons.forEach(button => {
+        // Gets the postId from button.dataset.postId
+        const postId = button.dataset.postId;
+  
+        // If a postId exists, add a click event listener to the button
+        if (postId) {
+          // Inside the loop, add a click event listener to each button
+          button.addEventListener('click', function(event) {
+            // The listener calls an anonymous function
+            // Inside the anonymous function, the function toggleComments is called
+            toggleComments(event, postId);
+          });
+        }
+      });
+  
+      // Return the button elements which were selected
+      return buttons;
+    } else {
+      console.error('No buttons found.');
+      return null;
+    }
   }
-});
-}
-
-return buttons;
-}
+  
 
 /*
 7. removeButtonListeners
